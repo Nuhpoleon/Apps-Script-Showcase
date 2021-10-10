@@ -1,0 +1,99 @@
+function SheetEditor() {
+  var sys = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1")
+  var register = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet2")
+  var log = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet3")
+  
+  var addstatus = sys.getRange('A11').getValue()
+  var removestatus = sys.getRange('B11').getValue()
+
+  var removecount = 4
+  var addcount = 4
+  var y = 4
+
+  if(removestatus > 0){
+    var removelimit = sys.getRange('B13').getValue()
+
+    while(removecount < removelimit){
+      
+      var current = 4
+      var registerrows = sys.getRange('A2').getValue()
+      var registerlimit = registerrows + 1
+      var name = log.getRange('B'+removecount).getValue()
+      
+      while(current < registerlimit){
+        var checkname = register.getRange('B'+current).getValue()
+        if(checkname == name){
+          register.deleteRow(current)
+          current = current + 1
+        }
+        else{current = current + 1}
+
+      }
+      log.getRange('B'+removecount).setValue("")
+      removecount = removecount + 1
+
+
+    }
+
+  }
+  if(addstatus > 0){
+    
+    var registerrows = sys.getRange('A2').getValue()
+    var rowstoadd = sys.getRange('A9').getValue()
+    var x = 0
+
+    while(x < rowstoadd){
+
+      register.insertRowAfter(registerrows)
+      x = x + 1
+
+    }
+
+    var registerrows = sys.getRange('A2').getValue()
+    var olimit = registerrows + 1
+
+    while(y<olimit){
+
+      var strikecell = register.getRange('F'+y).getValue()
+      if(strikecell == ""){
+        register.getRange('F'+y).setValue("0")
+        y = y + 1
+      }
+      else{y = y + 1}
+
+    }
+
+    var addlimit = sys.getRange('A13').getValue()
+
+    while(addcount < addlimit){
+
+      
+      var lock = 0
+      var current = 4
+      var registerrows = sys.getRange('A2').getValue()
+      var registerlimit = registerrows + 1
+      var name = log.getRange('A'+addcount).getValue()
+
+      sys.getRange('G12').setValue(name)
+
+      while(current < registerlimit){
+        var checkempty = register.getRange('B'+current).getValue()
+        if(checkempty == ""){
+          if(lock < 1){
+            register.getRange('B'+current).setValue(name)
+            current = current + 1
+            var lock = 1
+          }
+          else{current = current + 1}
+        }
+        else{current = current + 1}
+      }
+
+      log.getRange('A'+addcount).setValue("")
+      addcount = addcount + 1
+
+    }
+    
+
+
+  }
