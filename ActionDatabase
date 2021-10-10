@@ -1,0 +1,74 @@
+function ActionDatabaseEditor() {
+  var sys = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("sys")
+  var database = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Action Database")
+  var edit = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Action Edit")
+
+  var addstatus = sys.getRange('D8').getValue()
+  var delstatus = sys.getRange('E8').getValue()
+
+  var cell = 1
+  if(addstatus > 0){
+
+    var range = edit.getRange('A5:F5').getValues()
+
+    while(cell < 100){
+
+      var checkcell = database.getRange('B'+cell).getValue()
+      
+      if(checkcell == ''){
+
+        timezone = "GMT+" + new Date().getTimezoneOffset()/60
+        var date = Utilities.formatDate(new Date(), timezone, "yyyy-MM-dd HH:mm")
+        database.getRange('A'+cell+':F'+cell).setValues(range)
+        database.getRange('G'+cell).setValue(date)
+        var cell = 100
+
+      }
+      else{cell = cell + 1}
+
+    }
+    edit.getRange('A5:F5').clear()
+
+
+  }
+
+  var cell = 1
+  var cell2 = 1
+  if(delstatus > 0){
+
+    var pardoned = edit.getRange('B8').getValue()
+    
+    while(cell<100){
+      
+      var checkname = database.getRange('B'+cell).getValue()
+
+        if(checkname == pardoned){
+          database.deleteRow(cell)
+          var cell = 100
+        }
+        else{cell = cell + 1}
+
+    }
+
+    var info = edit.getRange('A8:D8').getValues()
+    while(cell2<50){
+
+      var checkcell = database.getRange('I'+cell2).getValue()
+
+      if(checkcell == ''){
+
+        timezone = "GMT+" + new Date().getTimezoneOffset()/60
+        var date = Utilities.formatDate(new Date(), timezone, "yyyy-MM-dd HH:mm")
+        database.getRange('H'+cell2+':K'+cell2).setValues(info)
+        database.getRange('L'+cell2).setValue(date)
+        var cell2 = 100
+
+      }
+      else{cell2 = cell2 + 1}
+
+    }
+    edit.getRange('A8:F8').clear()
+
+
+
+  }
